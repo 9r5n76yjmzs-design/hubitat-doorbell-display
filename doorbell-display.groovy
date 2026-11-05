@@ -18,6 +18,9 @@ import groovy.transform.Field
 @Field static final String APP_NAME = 'Doorbell Display'
 @Field static final String APP_VERSION = '0.1.0'
 @Field static final Integer DEFAULT_DISPLAY_SECONDS = 60
+// Extra time after the display ends during which rings are still ignored, so a restore that is a little late
+// isn't overlapped by a new display.
+@Field static final Integer RESTORE_MARGIN_SECONDS = 5
 @Field static final List<String> UNKNOWN_VALUES = ['unknown', 'none']
 
 definition(
@@ -57,7 +60,7 @@ Map mainPage() {
             }
             input 'displaySeconds', 'number', title: 'Put the previous liveview back after (seconds)', range: '5..3600',
                 defaultValue: DEFAULT_DISPLAY_SECONDS, required: true
-            paragraph 'Another ring while the doorbell is showing restarts the timer. If someone changes a ViewPort to a different liveview in the meantime, that ViewPort is left alone.'
+            paragraph 'Rings while the doorbell is showing are ignored and don\'t restart the timer; a ring after the previous liveview is back starts a new display. If someone changes a ViewPort to a different liveview in the meantime, that ViewPort is left alone.'
         }
         section('Logging') {
             input 'logEnable', 'bool', title: 'Enable debug logging', defaultValue: false
@@ -97,28 +100,33 @@ void ringHandler(evt) {
         log.warn "${app.label ?: APP_NAME}: the doorbell rang, but no liveview is chosen; open the app and choose one"
         return
     }
-    Map<String, String> saved = (state.saved ?: [:]) as Map<String, String>
-    boolean alreadyShowing = state.active == true
+    String doorbellName = doorbell?.displayName ?: 'Doorbell'
+    // Rings during the display are ignored: the timer is not restarted. The deadline (with a small margin)
+    // means a restore that never ran, for example after a hub reboot, can't block later rings.
+    if (state.active == true && now() < ((state.activeUntil ?: 0L) as Long)) {
+        log_info "${doorbellName} rang again while '${target}' is showing; ignored"
+        return
+    }
+    Integer seconds = (displaySeconds ?: DEFAULT_DISPLAY_SECONDS) as Integer
+    Map<String, String> saved = [:]
     viewports?.each { vp ->
         String key = vp.id as String
         String currentName = vp.currentValue('liveview', true) as String
-        // Remember what this ViewPort showed before the first ring only. An empty value means "don't restore".
-        if (!saved.containsKey(key)) {
-            String currentId = vp.currentValue('liveviewId', true) as String
-            if (isKnown(currentId) && !sameLiveview(currentName, target)) {
-                saved[key] = currentId
-                log_debug "${vp.displayName} was showing '${currentName}'; it will be put back"
-            } else {
-                saved[key] = ''
-                log_debug "${vp.displayName} was showing '${currentName}'; nothing to put back"
-            }
+        // Remember what this ViewPort shows now. An empty value means "don't restore".
+        String currentId = vp.currentValue('liveviewId', true) as String
+        if (isKnown(currentId) && !sameLiveview(currentName, target)) {
+            saved[key] = currentId
+            log_debug "${vp.displayName} was showing '${currentName}'; it will be put back"
+        } else {
+            saved[key] = ''
+            log_debug "${vp.displayName} was showing '${currentName}'; nothing to put back"
         }
         if (!sameLiveview(currentName, target)) vp.setLiveview(target)
     }
     state.saved = saved
     state.active = true
-    Integer seconds = (displaySeconds ?: DEFAULT_DISPLAY_SECONDS) as Integer
-    log_info "${doorbell?.displayName ?: 'Doorbell'} rang: ${alreadyShowing ? 'still showing' : 'showing'} '${target}' for ${seconds} seconds"
+    state.activeUntil = now() + (seconds + RESTORE_MARGIN_SECONDS) * 1000L
+    log_info "${doorbellName} rang: showing '${target}' for ${seconds} seconds"
     runIn seconds, 'restoreViewports'
 }
 
@@ -137,6 +145,7 @@ void restoreViewports() {
         vp.setLiveview(savedId)
     }
     state.remove('saved')
+    state.remove('activeUntil')
     state.active = false
 }
 

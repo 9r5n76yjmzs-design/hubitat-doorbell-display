@@ -13,7 +13,7 @@ It uses the devices from [hubitat-unifi-protect](https://github.com/9r5n76yjmzs-
 1. After the set time, each ViewPort goes back to the liveview it showed before the ring.
 
 Details:
-- **Another ring while the doorbell is showing** restarts the timer. The liveview remembered from before the first ring is kept.
+- **Rings while the doorbell is showing are ignored**, however many there are. They don't restart the timer, so the ViewPorts go back at the time set by the first ring. A ring after that starts a new display.
 - **If someone changes a ViewPort to a different liveview in the meantime**, that ViewPort is left alone when the time is up.
 - **If a ViewPort was already showing the chosen liveview**, or its liveview is `unknown` (Protect couldn't be reached), it isn't switched back.
 - **Push on the Doorbell device** triggers the app too, so you can test it without going to the door.
