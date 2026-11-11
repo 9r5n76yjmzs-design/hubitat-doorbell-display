@@ -4,7 +4,7 @@ A Hubitat Elevation app that shows the doorbell camera on UniFi Protect ViewPort
 
 It uses the devices from [hubitat-unifi-protect](https://github.com/9r5n76yjmzs-design/hubitat-unifi-protect): a **UniFi Protect Doorbell** to detect the ring and one or more **UniFi Protect Viewport** devices to switch.
 
-> **Status:** early development (0.1.0). Parse-checked, not yet tested on a hub.
+> **Status:** early development (0.1.1). Tested on a hub with UniFi Protect 7.3.74.
 
 ## How it works
 
@@ -36,10 +36,14 @@ Details:
 
 Install the app again for another doorbell or a different set of ViewPorts.
 
-## Known limitations (0.1.0)
+## Known limitations (0.1.1)
 
 - **Hubitat can't pre-select a device**, so the doorbell has to be chosen even when there's only one. The list shows only doorbells.
 - **The liveview list comes from the ViewPorts.** If Protect can't be reached when the app is opened, the list is empty. A liveview already chosen stays selected.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for what the app can reach and the secure coding rules every change follows.
 
 ## License
 
