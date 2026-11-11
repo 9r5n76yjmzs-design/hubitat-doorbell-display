@@ -4,7 +4,7 @@ This app runs on a Hubitat Elevation hub. It only uses devices you select: a Uni
 
 ## Reporting a problem
 
-Please report security problems privately to the maintainer, Michael Dailous, rather than in a public issue.
+Please report security problems privately, not in a public issue: on GitHub, open this repository's **Security** tab and choose **Report a vulnerability**. The report goes only to the maintainer, Michael Dailous.
 
 ## What the app can reach
 

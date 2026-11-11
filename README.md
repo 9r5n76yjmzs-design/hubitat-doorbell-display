@@ -28,7 +28,9 @@ Details:
 
 ## Setup
 
-1. In Hubitat, go to **Apps Code** → **New App**, paste [`doorbell-display.groovy`](doorbell-display.groovy) and click **Save**. While this repository is private, paste the code directly instead of importing it from the raw URL.
+1. Install the app:
+   - **With Hubitat Package Manager (recommended):** in HPM, choose **Install** → **From a URL**, enter `https://raw.githubusercontent.com/9r5n76yjmzs-design/hubitat-doorbell-display/main/packageManifest.json`, and follow the steps. Install the **UniFi Protect** and **LGTV with webOS** packages the same way; HPM doesn't install them for you. HPM can only install while the repositories are public.
+   - **Manually:** go to **Apps Code** → **New App**, paste [`doorbell-display.groovy`](doorbell-display.groovy) and click **Save**.
 1. Go to **Apps** → **Add User App** → **Doorbell Display**.
 1. Choose:
    - **Doorbell**: the list shows only UniFi Protect Doorbell devices.

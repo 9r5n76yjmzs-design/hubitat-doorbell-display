@@ -1,0 +1,28 @@
+{
+    "packageName": "Doorbell Display",
+    "version": "0.2.0",
+    "releaseNotes": "v0.2.0 - first packaged release.\n - Shows the doorbell camera on UniFi Protect ViewPorts and switches each ViewPort's LG TV to it, only when that TV is on.\n - Puts everything back afterwards unless someone took control.\nNeeds the UniFi Protect and LGTV with webOS packages.\nSee CHANGELOG.md for details.",
+    "minimumHEVersion": "2.3.0",
+    "author": "Michael Dailous",
+    "dateReleased": "2026-11-11",
+    "documentationLink": "https://github.com/9r5n76yjmzs-design/hubitat-doorbell-display/blob/main/README.md",
+    "communityLink": "https://github.com/9r5n76yjmzs-design/hubitat-doorbell-display/issues",
+    "licenseFile": "https://raw.githubusercontent.com/9r5n76yjmzs-design/hubitat-doorbell-display/main/LICENSE",
+    "category": "Convenience",
+    "tags": [
+        "Cameras",
+        "Multimedia",
+        "Security"
+    ],
+    "apps": [
+        {
+            "id": "d732de7c-5e0d-4634-a4ab-8ccb70f2b6d8",
+            "name": "Doorbell Display",
+            "namespace": "dailous",
+            "location": "https://raw.githubusercontent.com/9r5n76yjmzs-design/hubitat-doorbell-display/main/doorbell-display.groovy",
+            "required": true,
+            "primary": true,
+            "oauth": false
+        }
+    ]
+}
