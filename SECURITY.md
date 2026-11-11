@@ -1,6 +1,6 @@
 # Security
 
-This app runs on a Hubitat Elevation hub. It only uses devices you select (a UniFi Protect Doorbell and Viewports from [hubitat-unifi-protect](https://github.com/9r5n76yjmzs-design/hubitat-unifi-protect)). The goal is that installing it does not widen what an attacker can reach through the hub.
+This app runs on a Hubitat Elevation hub. It only uses devices you select: a UniFi Protect Doorbell and Viewports from [hubitat-unifi-protect](https://github.com/9r5n76yjmzs-design/hubitat-unifi-protect), and LG TVs from [hubitat-lg-webos](https://github.com/9r5n76yjmzs-design/hubitat-lg-webos). The goal is that installing it does not widen what an attacker can reach through the hub.
 
 ## Reporting a problem
 
@@ -9,7 +9,9 @@ Please report security problems privately to the maintainer, Michael Dailous, ra
 ## What the app can reach
 
 - **Only the devices you select.** The app makes no network requests of its own, holds no secrets, and opens no endpoints (no `mappings`, OAuth or cloud callbacks).
-- **What it does:** on a doorbell ring it calls Set Liveview on the selected Viewports, then sets them back after the chosen time. Repeated rings are ignored while the display is active, and the display time is limited to 5 to 3600 seconds.
+- **What it does:** on a doorbell ring it calls Set Liveview on the selected Viewports and Start Activity on their TVs (only the inputs and apps chosen in its settings, or what a TV showed before), then sets them back after the chosen time. It never turns a TV on. Repeated rings are ignored while the display is active, and the display time is limited to 5 to 3600 seconds.
+- **On its settings page** it asks a selected TV for its input list (Get All Activities), at most once a minute per TV unless **Reload inputs** is clicked.
+- **What it reads:** the selected devices' current values, and during a display the TVs' input, channel, power and screen changes. Device values are treated as untrusted text.
 
 ## Secure coding standard
 
