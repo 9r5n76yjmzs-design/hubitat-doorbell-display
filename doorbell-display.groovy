@@ -16,7 +16,7 @@ import groovy.json.JsonSlurper
 import groovy.transform.Field
 
 @Field static final String APP_NAME = 'Doorbell Display'
-@Field static final String APP_VERSION = '0.1.0'
+@Field static final String APP_VERSION = '0.1.1'
 @Field static final Integer DEFAULT_DISPLAY_SECONDS = 30
 // Extra time after the display ends during which rings are still ignored, so a restore that is a little late
 // isn't overlapped by a new display.
@@ -63,7 +63,7 @@ Map mainPage() {
             paragraph 'Rings while the doorbell is showing are ignored and don\'t restart the timer; a ring after the previous liveview is back starts a new display. If someone changes a ViewPort to a different liveview in the meantime, that ViewPort is left alone.'
         }
         section('Logging') {
-            input 'logEnable', 'bool', title: 'Enable debug logging', defaultValue: false
+            input 'logEnable', 'bool', title: 'Enable debug logging (turns off after 30 minutes)', defaultValue: false
             input 'txtEnable', 'bool', title: 'Enable description text logging', defaultValue: true
         }
     }
@@ -81,7 +81,15 @@ void installed() {
 void updated() {
     log.info "${app.label ?: APP_NAME}: Settings saved"
     unsubscribe()
+    unschedule('logsOff')
+    if (logEnable) runIn 1800, 'logsOff'
     initialize()
+}
+
+// Debug logging switches itself off after 30 minutes, so it isn't left on by accident.
+void logsOff() {
+    app.updateSetting 'logEnable', [value:'false', type:'bool']
+    log.info "${app.label ?: APP_NAME}: Debug logging disabled"
 }
 
 void initialize() {
