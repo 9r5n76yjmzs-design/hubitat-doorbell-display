@@ -31,7 +31,7 @@ Details:
    - **Doorbell**: the list shows only UniFi Protect Doorbell devices.
    - **ViewPorts to switch**: one or more UniFi Protect Viewport devices.
    - **Liveview to show**: read from the ViewPorts. A liveview named "Doorbell" is pre-selected if there is one.
-   - **Put the previous liveview back after**: 5 to 3600 seconds (default 60).
+   - **Put the previous liveview back after**: 5 to 3600 seconds (default 30).
 1. Click **Done**.
 
 Install the app again for another doorbell or a different set of ViewPorts.

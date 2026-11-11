@@ -17,7 +17,7 @@ import groovy.transform.Field
 
 @Field static final String APP_NAME = 'Doorbell Display'
 @Field static final String APP_VERSION = '0.1.0'
-@Field static final Integer DEFAULT_DISPLAY_SECONDS = 60
+@Field static final Integer DEFAULT_DISPLAY_SECONDS = 30
 // Extra time after the display ends during which rings are still ignored, so a restore that is a little late
 // isn't overlapped by a new display.
 @Field static final Integer RESTORE_MARGIN_SECONDS = 5
